@@ -3,11 +3,9 @@
 #include <stdio.h>
 #include "ErrorCode.h"
 
-void addRedBlackTree(Node **rootPtr, Node *newNode){
-	_addRedBlackTree(rootPtr, newNode);
+void restructureUnBalanceTree( Node **rootPtr){
   Node *root = *rootPtr;
-
-  //Condition checking the structure of unbalance tree choose the rotation
+  
   if(root->left && root->left->color =='r'){
      if(root->left->left  && root->left->left->color =='r'){
         rightRotate(&(*rootPtr));
@@ -24,8 +22,17 @@ void addRedBlackTree(Node **rootPtr, Node *newNode){
       rightLeftRotate(&(*rootPtr));
       (*rootPtr)->left->color = 'r';}
   }
+  
+}
+
+void addRedBlackTree(Node **rootPtr, Node *newNode){
+  
+	_addRedBlackTree(rootPtr, newNode);
+  restructureUnBalanceTree( rootPtr);
   (*rootPtr)->color = 'b';
 }
+
+
 
 void _addRedBlackTree(Node **rootPtr, Node *newNode){
 	Node *root = *rootPtr;
@@ -45,7 +52,6 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode){
     root->color = 'r';
   	root->left->color = 'b';
   	root->right->color = 'b';
-    printf("in\n");
   }
 }
  

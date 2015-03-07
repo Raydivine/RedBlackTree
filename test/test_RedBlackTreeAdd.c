@@ -416,9 +416,7 @@ void test_addRedBlackTree_add_2_should_flip_color(void){
 	setNode(&node3, &node1, &node4, 'b');
 
 	Node *root = &node5;
-  printf("start\n");
 	addRedBlackTree(&root, &node2);
-  printf("end\n");
   TEST_ASSERT_NOT_NULL(root);
 	TEST_ASSERT_EQUAL_PTR(root, &node5);
 	TEST_ASSERT_EQUAL_PTR(node5.left , &node3);

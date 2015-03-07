@@ -7,7 +7,7 @@
 #include "CException.h"
 #include "ErrorCode.h"
 
-Node node1,node2,node3,node4 ,node5, node6, node7, node8, node9, node10, node11, node12, node13, node14, node15;
+Node node1,node2,node3,node4 ,node5, node6, node7, node8, node9, node10, node11, node12, node13, node14, node15, node20, node22, node30, node40, node60;;
 
 void setUp(void){
 	resetNode(&node1, 1);
@@ -25,6 +25,11 @@ void setUp(void){
 	resetNode(&node13, 13);
 	resetNode(&node14, 14);
 	resetNode(&node15, 15);
+  resetNode(&node20, 20);
+	resetNode(&node22, 22);
+	resetNode(&node30, 30);
+	resetNode(&node40, 40);
+	resetNode(&node60, 60);
 }
 
 void tearDown(void){
@@ -43,7 +48,27 @@ void test_removeNextLargerSuccessor_given_10r_then_remove_the_node_and_do_nothin
   removeNode = removeNextLargerSuccessor(&parent);
   TEST_ASSERT_NULL(parent);
   TEST_ASSERT_EQUAL_PTR(removeNode, &node10);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', removeNode);
 }
+
+/**
+ *       parent                     parent
+ *        |                          |
+ *        V                          v
+ *       1 (b)   successor 1 (b)     // (DoubleBlack)
+ *                 ---->            -
+ */
+void test_removeSuccessor_remove_successor_with_parent_10b(void)  {
+  setNode(&node1, NULL, NULL, 'b');
+  Node *parent = &node1;
+
+  Node *removedNode = removeNextLargerSuccessor(&parent);
+  TEST_ASSERT_NOT_NULL(removedNode);
+  TEST_ASSERT_EQUAL(1, removedNode->data);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', removedNode);
+  TEST_ASSERT_NULL(parent);
+}
+
 
 /**
  *   parent's left              parent's left
@@ -61,6 +86,26 @@ void test_removeNextLargerSuccessor_given_10b_15r_should_remove_successor_10_and
   TEST_ASSERT_EQUAL_PTR(    parent, &node15);
   TEST_ASSERT_EQUAL_PTR(removeNode, &node10);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node15);
+}
+
+/** 
+ *         parent                         parent
+ *           |                              |
+ *           V                              v
+ *          5(b)   successor  2(r)         5(b)
+ *        /    \        ---->            /    \
+ *    2(r)      -                      -       -
+ */
+void test_removeSuccessor_remove_successor_with_parent_5_and_right_child_is_NULL(void)  {
+  setNode(&node2, NULL, NULL, 'r');
+  setNode(&node5, &node2, NULL, 'b');
+  Node *parent = &node5;
+
+  Node *removedNode = removeNextLargerSuccessor(&parent);
+  TEST_ASSERT_NOT_NULL(removedNode);
+  TEST_ASSERT_EQUAL(2, removedNode->data);
+  TEST_ASSERT_NOT_NULL(parent);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', parent);
 }
 
 /**
@@ -82,6 +127,31 @@ void test_removeNextLargerSuccessor_with_12b_5r_18r_should_remove_successor_5(vo
   TEST_ASSERT_EQUAL_PTR(removeNode, &node5);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node14);
   TEST_ASSERT_EQUAL_NODE(NULL, &node14, 'b', &node12);
+}
+
+/**
+ *                 parent's left                      parent's left                     parent's left
+ *                  |                                   |                                     |
+ *                  V                                   v                                     v
+ *                 5(b)       successor 1(b)           5(b)         restructure               8(b)
+ *               /     \          ---->              //    \          ----->                /     \
+ *           1(b)      8(b)                         -       8(b)                          5(b)    10(b)
+ *          /    \    /    \                              /     \
+ *        -       -  -      10(r)                        -       10(r)
+ */
+void test_removeNextLargerSuccessor_case1_with_root_5_and_right_child_8r_10b(void)  {
+  setNode(&node1, NULL, NULL, 'b');
+  setNode(&node10, NULL, NULL, 'r');
+  setNode(&node8, NULL, &node10, 'b');
+  setNode(&node5, &node1, &node8, 'b');
+  Node *parent = &node5;
+
+  Node *removedNode = removeNextLargerSuccessor(&parent);
+  TEST_ASSERT_NOT_NULL(removedNode);
+  TEST_ASSERT_NOT_NULL(parent);
+  TEST_ASSERT_EQUAL_NODE(&node5, &node10, 'b', parent);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node10);
 }
 
 /**
