@@ -146,12 +146,17 @@ void test_removeNextLargerSuccessor_case1_with_root_5_and_right_child_8r_10b(voi
   setNode(&node5, &node1, &node8, 'b');
   Node *parent = &node5;
 
+  printf("start\n");
   Node *removedNode = removeNextLargerSuccessor(&parent);
+  printf("here\n");
   TEST_ASSERT_NOT_NULL(removedNode);
   TEST_ASSERT_NOT_NULL(parent);
+  TEST_ASSERT_EQUAL(1, removedNode->data);
   TEST_ASSERT_EQUAL_NODE(&node5, &node10, 'b', parent);
-  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
+  TEST_ASSERT_EQUAL_NODE(&node5, &node10, 'b', &node8);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node10);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
+  
 }
 
 /**

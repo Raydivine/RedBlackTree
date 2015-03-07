@@ -5,28 +5,46 @@
 
 void restructureUnBalanceTree( Node **rootPtr){
   Node *root = *rootPtr;
-  
-  if(root->left && root->left->color =='r'){
-     if(root->left->left  && root->left->left->color =='r'){
+
+  if( root->left && !(root->right) ){
+     if( root->left->left && !(root->left->right) ){
         rightRotate(&(*rootPtr));
         (*rootPtr)->right->color = 'r';
-     }else if( root->left->right  && root->left->right->color =='r'){
+     }else if( root->left->right && !(root->left->left) ){
         leftRightRotate(&(*rootPtr));
-        (*rootPtr)->right->color = 'r';}
+        (*rootPtr)->right->color = 'r';
+      }      
   }
-  if(root->right && root->right->color =='r' ){
-    if(root->right->right && root->right->right->color =='r'){
+  else if(root->right  && !(root->left)  ){
+    if( root->right->right  && !(root->right->left) ){
       leftRotate(&(*rootPtr));
       (*rootPtr)->left->color = 'r';
-    }else if(root->right->left && root->right->left->color =='r'){
+    }else if( root->right->left && !(root->right->right) ){
       rightLeftRotate(&(*rootPtr));
-      (*rootPtr)->left->color = 'r';}
+      (*rootPtr)->left->color = 'r';
+     }       
   }
-  
+}
+
+void restructureUnBalanceTreeWithoutColourFlopping( Node **rootPtr){
+  Node *root = *rootPtr;
+
+  if( root->left && !(root->right) ){
+     if( root->left->left && !(root->left->right) )
+        rightRotate(&(*rootPtr));
+     else if( root->left->right && !(root->left->left) )
+        leftRightRotate(&(*rootPtr));    
+  }
+  else if(root->right  && !(root->left)  ){
+    if( root->right->right  && !(root->right->left) )
+      leftRotate(&(*rootPtr));
+    else if( root->right->left && !(root->right->right) )
+      rightLeftRotate(&(*rootPtr));   
+  }
 }
 
 void addRedBlackTree(Node **rootPtr, Node *newNode){
-  
+
 	_addRedBlackTree(rootPtr, newNode);
   restructureUnBalanceTree( rootPtr);
   (*rootPtr)->color = 'b';
@@ -47,18 +65,18 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode){
 
   if(!( (*rootPtr)->right && (*rootPtr)->left) )  // if root->right && root-> left are null
     return;
-    
+
   else if( root->left->color == root->right->color && ( root->left->left || root->left->right || root->right->right || root->right->left )){
     root->color = 'r';
   	root->left->color = 'b';
   	root->right->color = 'b';
   }
 }
- 
+
 Node *delRedBlackTree( Node **rootPtr, Node *newNode){
   Node *node =_delRedBlackTree(rootPtr, newNode);
   Node *root = *rootPtr;
-     
+
   return node;
 }
 
@@ -87,7 +105,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
    if((root->right && ((root->right->right && root->right->right->color =='r')||(root->right->left && root->right->left->color =='r'))) ||
       (root->left  && ((root->left ->right && root->left ->right->color =='r')||(root->left ->left && root->left ->left->color =='r')))    )
       NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
-      
+
    else if((root->right &&!(root->right->right && root->right->left))||( root->left && !(root->left->left && root->left->right)))
       NephewAndSiblingIsBlack(&(*rootPtr));   //condition checking for enter case2
 
@@ -96,6 +114,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
   }
   return node;
 }
+
 
 //Function for handle case1
 Node *NephewIsRedSiblingIsBlack(Node **rootPtr){
@@ -120,6 +139,7 @@ Node *NephewIsRedSiblingIsBlack(Node **rootPtr){
 }
 
 Node *ForceChildNodeToBlack(Node **rootPtr){
+  
   if((*rootPtr)->left)
     (*rootPtr)->left->color  = 'b';
   if((*rootPtr)->right)
@@ -191,6 +211,10 @@ Node *removeNextLargerSuccessor(Node **parentPtr){
   if(parent)
     if(parent->left && parent->left->right && !parent->left->left) // got leftRightChild but doesn't has leftleftChild
       _removeNextLargerSuccessor(&parent);
+
+     // printf("parent:%d\n",parent->data);
+
+  restructureUnBalanceTreeWithoutColourFlopping(&parent);
 
   return removeNode;
 }
