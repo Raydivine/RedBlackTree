@@ -5,6 +5,7 @@
 void  addRedBlackTree (Node **rootPtr, Node *newNode);
 void _addRedBlackTree (Node **rootPtr, Node *newNode);
 void restructureUnBalanceTree( Node **rootPtr);
+//void caseSelect( Node **rootPtr);
 Node *delRedBlackTree (Node **rootPtr, Node *newNode);
 Node *_delRedBlackTree(Node **rootPtr, Node *newNode);
 Node *NephewIsRedSiblingIsBlack(Node **rootPtr);  //case1
