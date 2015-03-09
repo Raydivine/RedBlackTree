@@ -208,30 +208,6 @@ void test_NephewIsRedSiblingIsBlack_should_leftRightRotate(void){
 /**        Root                     Root                  Root
  *           |                        |                     |
  *          v                         v                     v
- *         4(b)                     4(b)                  9(b)
- *        /    \      remove 3     //  \      rotate      /   \
- *      3(b)  9(b)  ---------->       9(r)  ---------> 4(b)   12(b)
- *               \                      \
- *                12(r)                  12(r)
- */
-void test_delRedBlackTree_remove_3_from_tree_should_rotate_and_and_new_root_color_is_same_as_original_root_color(void){
-  setNode(&node3 , NULL  , NULL   , 'b');
-  setNode(&node12, NULL  , NULL   , 'r');
-  setNode(&node9 , NULL  , &node12, 'b');
-  setNode(&node4 , &node3, &node9 , 'b');
-  Node *root = &node4, *node;
-
-  node = delRedBlackTree(&root, &node3);
-  TEST_ASSERT_EQUAL_PTR(node, &node3);
-  TEST_ASSERT_EQUAL_PTR(root, &node9);
-  TEST_ASSERT_EQUAL_NODE(NULL  , NULL   , 'b', &node4);
-  TEST_ASSERT_EQUAL_NODE(&node4, &node12, 'b', &node9);
-  TEST_ASSERT_EQUAL_NODE(NULL  , NULL   , 'b', &node12);
-}
-
-/**        Root                     Root                  Root
- *           |                        |                     |
- *          v                         v                     v
  *         4(r)                     4(r)                  9(r)
  *        /    \      remove 3     //  \      rotate      /   \
  *      3(b)  9(b)  ---------->       9(r)  ---------> 4(b)   12(b)
@@ -257,30 +233,6 @@ void test_delRedBlackTree_red_parent_remove_3_from_tree_should_rotate_and_and_ne
 /**        Root                     Root                  Root
  *           |                        |                     |
  *          v                         v                     v
- *         4(b)                     4(b)                  7(b)
- *        /    \      remove 3    //    \     rotate      /   \
- *      3(b)  9(b)  ---------->       9(r)  ---------> 4(b)   9(b)
- *           /                       /
- *         7[r]                     7[r]
- */
-void test_delRedBlackTree_red_parent_remove_3_from_tree_should_rotate_and_and_new_root_should_change_to_r_color(void){
-  setNode(&node3 , NULL  , NULL   , 'b');
-  setNode(&node7 , NULL  , NULL   , 'r');
-  setNode(&node9 , &node7, NULL   , 'b');
-  setNode(&node4 , &node3, &node9 , 'b');
-  Node *root = &node4, *node;
-
-  node = delRedBlackTree(&root, &node3);
-  TEST_ASSERT_EQUAL_PTR(node, &node3);
-  TEST_ASSERT_EQUAL_PTR(root, &node7);
-  TEST_ASSERT_EQUAL_NODE(NULL  , NULL  , 'b', &node4);
-  TEST_ASSERT_EQUAL_NODE(NULL  , NULL  , 'b', &node9);
-  TEST_ASSERT_EQUAL_NODE(&node4, &node9, 'b', &node7);
-}
-
-/**        Root                     Root                  Root
- *           |                        |                     |
- *          v                         v                     v
  *         4(r)                     4(r)                  7(r)
  *        /    \      remove 3    //    \     rotate      /   \
  *      3(b)  9(b)  ---------->       9(r)  ---------> 4(b)   9(b)
@@ -302,6 +254,7 @@ void test_delRedBlackTree_remove_3_from_tree_should_rotate_and_and_new_root_shou
   TEST_ASSERT_EQUAL_NODE(&node4, &node9, 'r', &node7);
 }
 
+// CASE 1(c)  Full
 /**        Root                     Root                    Root
  *           |                        |                       |
  *          v                         v                       v
@@ -318,8 +271,11 @@ void test_delRedBlackTree_remove_9_from_tree_should_rotate_and_and_new_root_shou
   setNode(&node4 , &node3, &node9 , 'r');
   Node *root = &node4, *node;
 
+  printf("start\n");
   node = delRedBlackTree(&root, &node9);
+  printf("end");
   TEST_ASSERT_EQUAL_PTR(node, &node9);
+  TEST_ASSERT_EQUAL(3,root->data);
   TEST_ASSERT_EQUAL_PTR(root, &node3);
   TEST_ASSERT_EQUAL_NODE(NULL  , NULL  , 'b', &node4);
   TEST_ASSERT_EQUAL_NODE(NULL  , NULL  , 'b', &node2);
@@ -369,7 +325,8 @@ void test_NephewAndSiblingIsBlack_change_2_to_double_black_change_3_to_red(void)
   node = NephewAndSiblingIsBlack(&root);
   TEST_ASSERT_EQUAL(root, &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL  , 'r', &node3);
-  TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'd', &node2);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL  , 'b', &node1);
+  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'd', &node2);
 }
 
 //CASE 2(b)
@@ -377,7 +334,7 @@ void test_NephewAndSiblingIsBlack_change_2_to_double_black_change_3_to_red(void)
  *      Root               Root
  *        |                  |
  *        v                  v
- *        |   dd black      |
+ *        |   dd black      ||
  *      2[r]  ----->      2[b]
  *     //  \                 \
  *        3[b]              3[r]
@@ -391,7 +348,8 @@ void test_NephewAndSiblingIsBlack_change_2_to__black_change_3_to_red(void){
   node = NephewAndSiblingIsBlack(&root);
   TEST_ASSERT_EQUAL(root, &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL  , 'r', &node3);
-  TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'b', &node2);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL  , 'b', &node1);
+  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'b', &node2);
 }
 
 //CASE 2(a) full
@@ -460,7 +418,7 @@ void test_SiblingIsRed_should_remove_1_should_left_rotate(void) {
   node = SiblingIsRed(&root);
   TEST_ASSERT_EQUAL_PTR(&node4, root);
   TEST_ASSERT_EQUAL_NODE(&node2, &node5, 'b', root);
-  TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'b', &node2);
+  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'b', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node3);
 }
@@ -562,10 +520,7 @@ void test_delRedBlackTreexx_remove_1_from_tree_with_root_1(void) {
   Node *root, *result;
   root = &node1;
 
-  printf("Start test_delRedBlackTreexx_remove_1_from_tree_with_root_1\n");
   result = delRedBlackTree(&root, &node1);
-  printf("-------------------------------------------------------\n");
-
   TEST_ASSERT_EQUAL_PTR(&node1, result);
   TEST_ASSERT_EQUAL_PTR(NULL, root);
 }
@@ -583,8 +538,6 @@ void test_delRedBlackTreexx_remove_2_from_tree_with_root_1(void) {
   setNode(&node1, NULL, NULL, 'b');
   Node *root = &node1;
 
-  printf("Start test_delRedBlackTreexx_remove_2_from_tree_with_root_1\n");
-
   Try {
     delRedBlackTree(&root, &node2);
     TEST_FAIL_MESSAGE("Expected ERR_NODE_UNAVAILABLE to be thrown");
@@ -593,8 +546,6 @@ void test_delRedBlackTreexx_remove_2_from_tree_with_root_1(void) {
     TEST_ASSERT_EQUAL_PTR(root, &node1);
     TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
   }
-
-  printf("-------------------------------------------------------\n");
 }
 
 /**2-node case
@@ -611,10 +562,7 @@ void test_delRedBlackTreexx_remove_1_from_tree_with_root_2(void) {
   Node *root, *result;
   root = &node2;
 
-  printf("Start test_delRedBlackTreexx_remove_1_from_tree_with_root_2\n");
-
   result = delRedBlackTree(&root, &node1);
-  printf("-------------------------------------------------------\n");
   TEST_ASSERT_EQUAL_PTR(&node1, result);
   TEST_ASSERT_EQUAL_PTR(&node2, root);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node2);
@@ -634,10 +582,7 @@ void test_delRedBlackTreexx_remove_5_from_tree_with_root_1(void) {
   Node *root, *result;
   root = &node1;
 
-  printf("Start test_delRedBlackTreexx_remove_5_from_tree_with_root_1\n");
   result = delRedBlackTree(&root, &node5);
-  printf("-------------------------------------------------------\n");
-
   TEST_ASSERT_EQUAL_PTR(&node5, result);
   TEST_ASSERT_EQUAL_PTR(root, &node1);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
@@ -658,10 +603,7 @@ void test_delRedBlackTreexx_remove_1_from_tree_with_root_2_and_two_child(void) {
   Node *root, *result;
   root = &node2;
 
-  printf("Start test_delRedBlackTreexx_remove_1_from_tree_with_root_2_and_two_child\n");
   result = delRedBlackTree(&root, &node1);
-  printf("-------------------------------------------------------\n");
-
   TEST_ASSERT_EQUAL_PTR(&node1, result);
   TEST_ASSERT_EQUAL_PTR(&node2, root);
   TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'b', &node2);

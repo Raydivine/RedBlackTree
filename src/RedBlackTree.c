@@ -147,7 +147,7 @@ void caseSelect( Node **rootPtr){
   Node *root = (*rootPtr)->right;
   if(root == NULL)
     return;
- 
+  printf("in\n");
   if(root ){
     if(root->color == 'b'){
       if((root->right && root->right->color =='r')||(root->left  && root->left->color == 'r')){
@@ -215,16 +215,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
   if(newNode->data < (*rootPtr)->data)
     node = _delRedBlackTree( &root->left, newNode);
 
-  if(root ){
-   if((root->right && ((root->right->right && root->right->right->color =='r')||(root->right->left && root->right->left->color =='r'))) ||
-      (root->left  && ((root->left ->right && root->left ->right->color =='r')||(root->left ->left && root->left ->left->color =='r')))    )
-      NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
-
-   else if((root->right &&!(root->right->right && root->right->left))||( root->left && !(root->left->left && root->left->right)))
-      NephewAndSiblingIsBlack(&(*rootPtr));   //condition checking for enter case2
-
-   else if((root->right && root->right->color == 'r') || (root->left && root->left->color == 'r'))
-      SiblingIsRed(&(*rootPtr));              //condition checking for enter case3
-  }
+  caseSelect(&(*rootPtr));
+  
   return node;
 }
