@@ -106,18 +106,14 @@ Node *NephewIsRedSiblingIsBlack(Node **rootPtr){
 //Function for handle case2
 Node *NephewAndSiblingIsBlack(Node **rootPtr){
   Node *root = *rootPtr;
-
+ 
   if(root->left)
     root->left->color = (root->left->color == 'd')? 'b':'r';
   if(root->right)
     root->right->color = (root->right->color == 'd')? 'b':'r';
-  
-  if(root->color == 'r')
-    root->color = 'b';
-  else
+  if(root->color == 'b')
     root->color = 'd';
-
- ForceChildNodeToRed( &(*rootPtr));
+  else  root->color = 'b';
 }
 
 //Function for handle case3
@@ -128,18 +124,20 @@ Node *SiblingIsRed(Node **rootPtr){
   if(root->right){
     leftRotate(&(*rootPtr));
     (*rootPtr)->left->color = 'r';
+    
     if((*rootPtr)->left && ((*rootPtr)->left->right) && ((*rootPtr)->left->right->right) )
-    NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case 1
+      NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case 1
     else
-    NephewAndSiblingIsBlack(&(*rootPtr)->left);    //enter case 2
+      NephewAndSiblingIsBlack(&(*rootPtr)->left);    //enter case 2
   }
   else if(root->left){
     rightRotate(&(*rootPtr));
     (*rootPtr)->right->color = 'r';
+    
     if((*rootPtr)->right && ((*rootPtr)->right->left) && ((*rootPtr)->right->left->left))
-    NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case1
+      NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case1
     else
-    NephewAndSiblingIsBlack(&(*rootPtr)->right);   //enter case2
+      NephewAndSiblingIsBlack(&(*rootPtr)->right);   //enter case2
   }
   (*rootPtr)->color = colour;
 }
@@ -161,7 +159,7 @@ void caseSelect( Node **rootPtr){
         printf("enter case2\n");
       }
     }
-   else if((root->right && root->right->color == 'r') || (root->left && root->left->color == 'r')){
+   else if(root->color == 'r' && (root->left||root->right)){
       SiblingIsRed(&(*rootPtr));   
        printf("enter case3\n");
    }
@@ -177,7 +175,6 @@ Node *removeNextLargerSuccessor(Node **parentPtr){
   }
   else if(parent->left){
     removeNode = removeNextLargerSuccessor(&(*parentPtr)->left);
-    printf("parent: %d\n",parent->data);
     if(isDoubleBlack((*parentPtr)->left, removeNode)) 
       caseSelect(&(*parentPtr)); 
   }
@@ -186,8 +183,6 @@ Node *removeNextLargerSuccessor(Node **parentPtr){
     *parentPtr = parent->right;
     (*parentPtr)->color = parent->color;
   }
-
-
   return removeNode;
 }
 
