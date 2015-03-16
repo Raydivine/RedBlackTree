@@ -71,7 +71,7 @@ void test_delRedBlackTreexx_remove_1_without_rotation_but_flip_color_with_3_pare
  *        /    \                            /
  *    1(b)      3(b)                     1(r)
  */
-void xtest_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_3_parents_and_2_childs(void) {
+void test_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_3_parents_and_2_childs(void) {
   setNode(&node1, NULL, NULL, 'b');
   setNode(&node3, NULL, NULL, 'b');
   setNode(&node2, &node1, &node3, 'r');
@@ -99,7 +99,7 @@ void xtest_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_3_par
  *                 /    \                                 \
  *            3(b)      6(b)                               6(r)
  */
-void xtest_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_root_2_two_parents_and_two_childs(void) {
+void test_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_root_2_two_parents_and_two_childs(void) {
   setNode(&node3, NULL, NULL, 'b');
   setNode(&node6, NULL, NULL, 'b');
   setNode(&node5, &node3, &node6, 'r');
@@ -107,7 +107,8 @@ void xtest_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_root_
   setNode(&node2, &node1, &node5, 'b');
   Node *root, *result;
   root = &node2;
-
+  
+  printf("start\n");
   result = delRedBlackTree(&root, &node3);
   TEST_ASSERT_EQUAL_PTR(&node3, result);
   TEST_ASSERT_EQUAL_PTR(root, &node2);
@@ -127,7 +128,7 @@ void xtest_delRedBlackTreexx_remove_3_without_rotation_but_flip_color_with_root_
  *                 /   \                              /
  *            3(b)      6(b)                      3(r)
  */
-void xtest_delRedBlackTreexx_remove_6_without_rotation_but_flip_color_with_root_2_two_parents_and_two_childs(void) {
+void test_delRedBlackTreexx_remove_6_without_rotation_but_flip_color_with_root_2_two_parents_and_two_childs(void) {
   setNode(&node3, NULL, NULL, 'b');
   setNode(&node6, NULL, NULL, 'b');
   setNode(&node5, &node3, &node6, 'r');
@@ -155,7 +156,7 @@ void xtest_delRedBlackTreexx_remove_6_without_rotation_but_flip_color_with_root_
  *     /    \         /    \                        \         /   \
  * 1(b)      3(b) 5(b)      7(b)                     3(r)  5(b)     7(b)
  */
-void xtest_delRedBlackTreexx_remove_1_without_rotation_but_flip_color_with_root_4_two_parents_and_4_childs(void) {
+void test_delRedBlackTreexx_remove_1_without_rotation_but_flip_color_with_root_4_two_parents_and_4_childs(void) {
   setNode(&node1, NULL, NULL, 'b');
   setNode(&node3, NULL, NULL, 'b');
   setNode(&node2, &node1, &node3, 'r');
@@ -166,7 +167,7 @@ void xtest_delRedBlackTreexx_remove_1_without_rotation_but_flip_color_with_root_
   Node *root, *result;
   root = &node4;
 
-  printf("Start test_delRedBlackTreexx_remove_1_without_rotation_but_flip_color_with_root_4_two_parents_and_4_childs\n");
+  printf("Start\n");
   result = delRedBlackTree(&root, &node1);
   printf("-------------------------------------------------------\n");
 
