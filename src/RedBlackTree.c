@@ -146,8 +146,8 @@ void caseSelect( Node **rootPtr){
 
   Node *root = (*rootPtr)->right;
   if(root == NULL)
-    return;
-  printf("in\n");
+    root = (*rootPtr)->left;
+
   if(root ){
     if(root->color == 'b'){
       if((root->right && root->right->color =='r')||(root->left  && root->left->color == 'r')){
@@ -189,6 +189,9 @@ Node *removeNextLargerSuccessor(Node **parentPtr){
 Node *delRedBlackTree( Node **rootPtr, Node *newNode){
   Node *node =_delRedBlackTree(rootPtr, newNode);
   Node *root = *rootPtr;
+  
+  if(root != NULL)
+    root->color = 'b';
 
   return node;
 }
@@ -206,16 +209,17 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
       successorNode->right = (*rootPtr)->right;
       *rootPtr = successorNode;
     }
-    else
-    *rootPtr = NULL;
+    else *rootPtr = NULL;
     return root;
   }
   if(newNode->data > (*rootPtr)->data)
     node = _delRedBlackTree( &root->right, newNode);
   if(newNode->data < (*rootPtr)->data)
     node = _delRedBlackTree( &root->left, newNode);
-
+ 
   caseSelect(&(*rootPtr));
+ // restructureUnBalanceTree(&(*rootPtr));
+
   
   return node;
 }
