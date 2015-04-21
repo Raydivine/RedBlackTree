@@ -170,9 +170,8 @@ void test_delRedBlackTreexx_remove_1_rotateLeft_and_flip_color_with_3_parents_an
   setNode(&node2, &node1, &node5, 'b');
   Node *root, *node;
   root = &node2;
-  printf("start\n");
+  
   node = delRedBlackTree(&root, &node1);
-  printf("end\n");
   TEST_ASSERT_EQUAL_PTR(&node1, node);
   TEST_ASSERT_EQUAL_PTR(root, &node5);
   TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'b', &node2);
@@ -353,7 +352,7 @@ void test_delRedBlackTree_red_parent_remove_3_from_tree_should_rotate_and_and_ne
  *          v                         v                     v
  *         4(r)                     4(r)                  7(r)
  *        /    \      remove 3    //    \     rotate      /   \
- *      3(b)  9(b)  ---------->       9(r)  ---------> 4(b)   9(b)
+ *      3(b)  9(b)  ---------->       9(b)  ---------> 4(b)   9(b)
  *           /                       /
  *         7[r]                     7[r]
  */

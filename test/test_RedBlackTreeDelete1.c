@@ -111,10 +111,11 @@ void test_delRedBlackTree_remove_3_without_rotation_but_flip_color_with_root_2_t
   node = delRedBlackTree(&root, &node3);
   TEST_ASSERT_EQUAL_PTR(&node3, node);
   TEST_ASSERT_EQUAL_PTR(root, &node2);
+  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node6);
   TEST_ASSERT_EQUAL_NODE(&node1, &node5, 'b', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
   TEST_ASSERT_EQUAL_NODE(NULL, &node6, 'b', &node5);
-  TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node6);
+  
 }
 
 /**rotation & flip color cases
@@ -151,7 +152,7 @@ void test_delRedBlackTree_remove_6_without_rotation_but_flip_color_with_root_2_t
  *                v                                      v
  *              4(b)            remove 1                4(b)
  *            /      \           ---->               /       \
- *       2(r)          6(r)                      2(b)          6(b)
+ *       2(r)          6(r)                      2(b)          6(r)
  *     /    \         /    \                        \         /   \
  * 1(b)      3(b) 5(b)      7(b)                     3(r)  5(b)     7(b)
  */
@@ -165,17 +166,16 @@ void test_delRedBlackTree_remove_1_without_rotation_but_flip_color_with_root_4_t
   setNode(&node4, &node2, &node6, 'b');
   Node *root, *node;
   root = &node4;
-  
+
   node = delRedBlackTree(&root, &node1);
   TEST_ASSERT_EQUAL_PTR(&node1, node);
   TEST_ASSERT_EQUAL_PTR(root, &node4);
   TEST_ASSERT_EQUAL_NODE(&node2, &node6, 'b', &node4);
   TEST_ASSERT_EQUAL_NODE(NULL, &node3, 'b', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node3);
-
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node7);
-  TEST_ASSERT_EQUAL_NODE(&node5, &node7, 'b', &node6);
+  TEST_ASSERT_EQUAL_NODE(&node5, &node7, 'r', &node6);
 }
 
 /**flip color cases
@@ -184,7 +184,7 @@ void test_delRedBlackTree_remove_1_without_rotation_but_flip_color_with_root_4_t
  *                v                                      v
  *              4(b)            remove 3                4(b)
  *            /      \           ---->               /       \
- *       2(r)          6(r)                      2(b)          6(b)
+ *       2(r)          6(r)                      2(b)          6(r)
  *     /    \         /    \                    /             /   \
  * 1(b)      3(b) 5(b)      7(b)             1(r)         5(b)     7(b)
  */
@@ -205,7 +205,7 @@ void test_delRedBlackTree_remove_3_without_rotation_but_flip_color_with_root_4_t
   TEST_ASSERT_EQUAL_NODE(&node2, &node6, 'b', &node4);
   TEST_ASSERT_EQUAL_NODE(&node1, NULL, 'b', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node1);
-  TEST_ASSERT_EQUAL_NODE(&node5, &node7, 'b', &node6);
+  TEST_ASSERT_EQUAL_NODE(&node5, &node7, 'r', &node6);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node5);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node7);
 }
@@ -216,7 +216,7 @@ void test_delRedBlackTree_remove_3_without_rotation_but_flip_color_with_root_4_t
  *                v                                      v
  *              4(b)            remove 5                4(b)
  *            /      \           ---->               /       \
- *       2(r)          6(r)                      2(b)         6(b)
+ *       2(r)          6(r)                      2(r)         6(b)
  *     /    \         /    \                    /   \             \
  * 1(b)      3(b) 5(b)      7(b)            1(b)     3(b)          7(r)
  */
@@ -235,7 +235,7 @@ void test_delRedBlackTree_remove_5_without_rotation_but_flip_color_with_root_4_t
   TEST_ASSERT_EQUAL_PTR(&node5, node);
   TEST_ASSERT_EQUAL_PTR(root, &node4);
   TEST_ASSERT_EQUAL_NODE(&node2, &node6, 'b', &node4);
-  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'b', &node2);
+  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'r', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node3);
   TEST_ASSERT_EQUAL_NODE(NULL, &node7, 'b', &node6);
@@ -267,7 +267,7 @@ void test_delRedBlackTree_remove_7_without_rotation_but_flip_color_with_root_4_t
   TEST_ASSERT_EQUAL_PTR(&node7, node);
   TEST_ASSERT_EQUAL_PTR(root, &node4);
   TEST_ASSERT_EQUAL_NODE(&node2, &node6, 'b', &node4);
-  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'b', &node2);
+  TEST_ASSERT_EQUAL_NODE(&node1, &node3, 'r', &node2);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node3);
   TEST_ASSERT_EQUAL_NODE(&node5, NULL, 'b', &node6);

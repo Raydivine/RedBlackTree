@@ -3,6 +3,70 @@
 #include <stdio.h>
 #include "ErrorCode.h"
 
+
+int gotChildNode(Node **rootPtr){
+  Node *root = *rootPtr;
+  if( root->left || root->right)
+    return 1;
+  return 0;
+}
+
+int noChildNode(Node **rootPtr){
+  Node *root = *rootPtr;
+  if( !root->left && !root->right)
+    return 1;
+  return 0;
+}
+
+int isDoubleBlack(Node *rootPtr, Node *removedNode){
+
+  if((rootPtr == NULL ||  rootPtr->color == 'd')  &&  (removedNode->color == 'b' ||  removedNode->color == 'r'))
+    return 1;
+  else  return 0;
+}
+
+int bothChildNodeIsBlack(Node *rootPtr){
+  if(rootPtr->left->color != 'b' || rootPtr->right->color != 'b')
+    return 0;
+  return 1;
+}
+
+int checkForEnterCase1( Node *root){
+    if( root->left && !root->right && root->left->color =='b' ){
+      if( (root->left ->right && root->left ->right->color =='r') || (root->left->left && root->left->left->color =='r') )
+         return 1;
+    }
+    else if( root->right && !root->left && root->right->color =='b' ){
+      if( (root->right->right && root->right->right->color =='r') || (root->right->left && root->right->left->color =='r') )
+         return 1;
+    }
+    return 0;
+}
+
+int checkForEnterCase2( Node *root){
+    if(root->left && !root->right){
+      if( noChildNode( &(root->left) ) )
+        return 1;  
+    }
+    else if( root->right && !root->left){
+      if( noChildNode( &(root->right) ) )
+        return 1;
+    }
+    return 0;
+}
+
+int checkForEnterCase3( Node *root){
+    if(root->left && root->left->color =='r'){
+      if( !root->right || root->right->color =='d')
+        return 1;  
+    }
+    else if( root->right && root->right->color =='r'){
+      if( !root->left || root->left->color =='d')
+        return 1;
+    }
+    return 0;
+}
+
 void restructureUnBalanceTree( Node **rootPtr){
   Node *root = *rootPtr;
 
@@ -71,64 +135,6 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode){
   }
 }
 
-int gotChildNode(Node **rootPtr){
-  Node *root = *rootPtr;
-  if( root->left || root->right)
-    return 1;
-  return 0;
-}
-
-int noChildNode(Node **rootPtr){
-  Node *root = *rootPtr;
-  if( !root->left && !root->right)
-    return 1;
-  return 0;
-}
-
-int checkHowManyChildNode(Node *rootPtr){
-  if( !rootPtr->left && !rootPtr->right)
-    return 0;
-  else if( rootPtr->left && rootPtr->right)
-    return 2;
-  return 1;
-}
-
-int checkWhichHasMoreChildNode(Node *rootPtr1, Node *rootPtr2){
-  int left = checkHowManyChildNode(rootPtr1);
-  int right = checkHowManyChildNode(rootPtr2);
-  
-  if(left>right)
-    return 1;
-  return 2;
-}
-
-int determineUnbalanceTree(Node **rootPtr){
-  Node *root = *rootPtr;
-  if(root->left && !(root->right)){
-    if( gotChildNode( &(root->left)))
-      return 1;
-    return 0;
-  }
-  else if(root->right && !(root->left)){
-    if( gotChildNode( &(root->right)))
-      return 1;
-    return 0;
-  }
-}
-
-int isDoubleBlack(Node *rootPtr, Node *removedNode) {
-
-  if((rootPtr == NULL ||  rootPtr->color == 'd')  &&  (removedNode->color == 'b' ||  removedNode->color == 'r'))
-    return 1;
-  else  return 0;
-}
-
-int bothChildNodeIsBlack(Node *rootPtr){
-  if(rootPtr->left->color != 'b' || rootPtr->right->color != 'b')
-    return 0;
-  return 1;
-}
-
 void ForceChildNodeToBlack(Node **rootPtr){
   if((*rootPtr)->left)
     (*rootPtr)->left->color  = 'b';
@@ -174,7 +180,7 @@ void SiblingIsRed(Node **rootPtr){
   Node *root = *rootPtr;
   char colour = root->color; // store the original root color
 
-  if(root->right){
+  if( root->right ){
     leftRotate(&(*rootPtr));
     (*rootPtr)->left->color = 'r';
     
@@ -183,7 +189,7 @@ void SiblingIsRed(Node **rootPtr){
     else
       NephewAndSiblingIsBlack(&(*rootPtr)->left);    //enter case 2
   }
-  else if(root->left){
+  else if( root->left ){
     rightRotate(&(*rootPtr));
     (*rootPtr)->right->color = 'r';
     
@@ -197,64 +203,22 @@ void SiblingIsRed(Node **rootPtr){
 
 void caseSelect( Node **rootPtr){
   Node *root = *rootPtr;
-  printf("root: %d\n",root->data);
-  if(root){
-    if( (root->right && ((root->right->right && root->right->right->color =='r')||(root->right->left && root->right->left->color =='r'))) ||
-        (root->left && ((root->left ->right && root->left ->right->color =='r')||(root->left ->left && root->left ->left->color =='r'))) ){
+
+  if(root){  
+    if( checkForEnterCase1(root) ){
       NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
-      printf("enter case1\n");
-        }
-    else if((root->right &&!(root->right->right && root->right->left))||( root->left && !(root->left->left && root->left->right))){
+      //printf("enter case1\n");
+    }
+    else if( checkForEnterCase2(root) ){
       NephewAndSiblingIsBlack(&(*rootPtr)); //condition checking for enter case2
-      printf("enter case2\n");
+      //printf("enter case2\n");
     }
-    else if((root->right && root->right->color == 'r') || (root->left && root->left->color == 'r')){
+    else if( checkForEnterCase3(root) ){
       SiblingIsRed(&(*rootPtr)); //condition checking for enter case3
-      printf("enter case3\n");
+      //printf("enter case3\n");
     }
   }
-  
-  
 }
-
-void caseSelectX( Node **rootPtr){
- printf("root: %d\n",(*rootPtr)->data);
-
-  Node *root ;
-  int num;
-  
-  if((*rootPtr)->left == NULL )
-    root = (*rootPtr)->right;
-  else if((*rootPtr)->right == NULL )
-    root = (*rootPtr)->left;
-  else if((*rootPtr)->left && (*rootPtr)->right){
-    num = checkWhichHasMoreChildNode((*rootPtr)->left, (*rootPtr)->right);
-    if( num = 1)
-      root = (*rootPtr)->left;
-    else if ( num = 2)
-      root = (*rootPtr)->right;
-  }
-  
- // printf("root: %d\n",root->data);
-  if(root ){
-    if(root->color == 'b'){
-      if((root->right && root->right->color =='r')||(root->left  && root->left->color == 'r')){
-        NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
-        printf("enter case1\n");
-      }
-      else if(( root->right == NULL ||  root->right->color == 'b') && (root->left == NULL || root->left->color == 'b')){
-        NephewAndSiblingIsBlack(&(*rootPtr));   //condition checking for enter case2
-
-        printf("enter case2\n");
-      }
-    }
-   else if(root->color == 'r' && (root->left||root->right)){
-      SiblingIsRed(&(*rootPtr));   
-       printf("enter case3\n");
-   }
-  }
-}
-
 
 void caseSelectForSucessor( Node **rootPtr){
 
@@ -266,17 +230,16 @@ void caseSelectForSucessor( Node **rootPtr){
     if(root->color == 'b'){
       if((root->right && root->right->color =='r')||(root->left  && root->left->color == 'r')){
         NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
-        printf("enter case1\n");
+        //printf("enter Sucessor case1\n");
       }
       else if(( root->right == NULL ||  root->right->color == 'b') && (root->left == NULL || root->left->color == 'b')){
         NephewAndSiblingIsBlack(&(*rootPtr));   //condition checking for enter case2
-
-        printf("enter case2\n");
+        //printf("enter Sucessor case2\n");
       }
     }
    else if(root->color == 'r' && (root->left||root->right)){
       SiblingIsRed(&(*rootPtr));   
-       printf("enter case3\n");
+       //printf("enter Sucessor case3\n");
    }
   }
 }
@@ -333,8 +296,5 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
     node = _delRedBlackTree( &root->left, newNode);
   
   caseSelect(&(*rootPtr));
-
- // restructureUnBalanceTree(&(*rootPtr));
-
   return node;
 }
