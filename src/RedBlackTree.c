@@ -206,15 +206,15 @@ void caseSelect( Node **rootPtr){
 
   if(root){  
     if( checkForEnterCase1(root) ){
-      NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
+      NephewIsRedSiblingIsBlack(&(*rootPtr)); 
       //printf("enter case1\n");
     }
     else if( checkForEnterCase2(root) ){
-      NephewAndSiblingIsBlack(&(*rootPtr)); //condition checking for enter case2
+      NephewAndSiblingIsBlack(&(*rootPtr)); 
       //printf("enter case2\n");
     }
     else if( checkForEnterCase3(root) ){
-      SiblingIsRed(&(*rootPtr)); //condition checking for enter case3
+      SiblingIsRed(&(*rootPtr)); 
       //printf("enter case3\n");
     }
   }
@@ -229,11 +229,11 @@ void caseSelectForSucessor( Node **rootPtr){
   if(root ){
     if(root->color == 'b'){
       if((root->right && root->right->color =='r')||(root->left  && root->left->color == 'r')){
-        NephewIsRedSiblingIsBlack(&(*rootPtr)); //condition checking for enter case1
+        NephewIsRedSiblingIsBlack(&(*rootPtr)); 
         //printf("enter Sucessor case1\n");
       }
       else if(( root->right == NULL ||  root->right->color == 'b') && (root->left == NULL || root->left->color == 'b')){
-        NephewAndSiblingIsBlack(&(*rootPtr));   //condition checking for enter case2
+        NephewAndSiblingIsBlack(&(*rootPtr));   
         //printf("enter Sucessor case2\n");
       }
     }
