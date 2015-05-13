@@ -663,7 +663,39 @@ void test_delRedBlackTree_remove_5_from_tree_with_5_10_13_14_15_20_nodes_with_ca
   TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node10);
 }
 
+/**  Case 3(c) Full leftSide
+ *
+ *            root                 root                      root                      root
+ *             /     remove 20      /       case3             /          case1          /
+ *            v      ----->        v      --------->         v         ------->        v
+ *           15(b)                15(b)                     5(b)                      5(b)
+ *          /  \                /   \\                    /   \                     /    \
+ *       5(r)   20(b)        5(r)   NULL               2(b)   15(r)               2(b)   7(r)
+ *      /  \                /   \                            /                          /   \
+ *   2(b)  7(b)           2(b)  7(b)                       7(b)                      6(b)   15(b)
+ *        /                    /                          /
+ *      6(r)                 6(r)                       6(r)
+ *
+ */
+void test_delRedBlackTree_remove_20_from_tree_with_root_15_root_and_node_2_5_6_7_20(){
 
+  setNode(&node2, NULL, NULL, 'b');
+  setNode(&node6, NULL, NULL, 'r');
+  setNode(&node7, &node6, NULL, 'b');
+  setNode(&node20, NULL, NULL, 'b');
+  setNode(&node5, &node2, &node7, 'r');
+  setNode(&node15, &node5, &node20, 'b');
+  Node *root = &node15;
+  Node *node;
+  node = delRedBlackTree(&root, &node20);
+  TEST_ASSERT_EQUAL(20 , node->data);
+  TEST_ASSERT_EQUAL(root->data,5);  
+  TEST_ASSERT_EQUAL_NODE(&node6, &node15, 'r', &node7);
+  TEST_ASSERT_EQUAL_NODE(&node2, &node7 , 'b', &node5);
+  TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
+  TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node15);
+  TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node6);
+}
 
 
 

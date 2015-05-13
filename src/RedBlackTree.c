@@ -31,42 +31,6 @@ int bothChildNodeIsBlack(Node *rootPtr){
   return 1;
 }
 
-int checkForEnterCase1( Node *root){
-    if( root->left && !root->right && root->left->color =='b' ){
-      if( (root->left ->right && root->left ->right->color =='r') || (root->left->left && root->left->left->color =='r') )
-         return 1;
-    }
-    else if( root->right && !root->left && root->right->color =='b' ){
-      if( (root->right->right && root->right->right->color =='r') || (root->right->left && root->right->left->color =='r') )
-         return 1;
-    }
-    return 0;
-}
-
-int checkForEnterCase2( Node *root){
-    if(root->left && !root->right){
-      if( noChildNode( &(root->left) ) )
-        return 1;  
-    }
-    else if( root->right && !root->left){
-      if( noChildNode( &(root->right) ) )
-        return 1;
-    }
-    return 0;
-}
-
-int checkForEnterCase3( Node *root){
-    if(root->left && root->left->color =='r'){
-      if( !root->right || root->right->color =='d')
-        return 1;  
-    }
-    else if( root->right && root->right->color =='r'){
-      if( !root->left || root->left->color =='d')
-        return 1;
-    }
-    return 0;
-}
-
 void restructureUnBalanceTree( Node **rootPtr){
   Node *root = *rootPtr;
 
@@ -149,75 +113,24 @@ void ForceChildNodeToRed( Node **rootPtr){
     (*rootPtr)->right->color = 'r';
 }
 
-//Function for handle case1
-void NephewIsRedSiblingIsBlack(Node **rootPtr){
-  Node *root = *rootPtr;
-  char colour = root->color; //store the original root color
+Node *removeNextLargerSuccessor(Node **parentPtr){
+  Node *parent = *parentPtr, *removeNode;
 
-  restructureUnBalanceTreeWithoutColourFlopping( rootPtr);
-  ForceChildNodeToBlack(&(*rootPtr));
-  (*rootPtr)->color = colour;
-}
-
-//Function for handle case2
-void NephewAndSiblingIsBlack(Node **rootPtr){
-  Node *root = *rootPtr;
-  
-  if(root->color == 'b')
-    root->color = 'd';
-  else if(root->color == 'r') 
-    root->color = 'b';
- 
-  if(root->left)
-    root->left->color = (root->left->color == 'd')? 'b':'r';
-  if(root->right)
-    root->right->color = (root->right->color == 'd')? 'b':'r';
-  
-}
-
-//Function for handle case3
-void SiblingIsRed(Node **rootPtr){
-  Node *root = *rootPtr;
-  char colour = root->color; // store the original root color
-
-  if( root->right ){
-    leftRotate(&(*rootPtr));
-    (*rootPtr)->left->color = 'r';
-    
-    if((*rootPtr)->left && ((*rootPtr)->left->right) && ((*rootPtr)->left->right->right) )
-      NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case 1
-    else
-      NephewAndSiblingIsBlack(&(*rootPtr)->left);    //enter case 2
+  if(parent->left == NULL && parent->right == NULL){
+    removeNode = *parentPtr;
+    *parentPtr = NULL;
   }
-  else if( root->left ){
-    rightRotate(&(*rootPtr));
-    (*rootPtr)->right->color = 'r';
-    
-    if((*rootPtr)->right && ((*rootPtr)->right->left) && ((*rootPtr)->right->left->left))
-      NephewIsRedSiblingIsBlack(&(*rootPtr)->left);  //enter case1
-    else
-      NephewAndSiblingIsBlack(&(*rootPtr)->right);   //enter case2
+  else if(parent->left){
+    removeNode = removeNextLargerSuccessor(&(*parentPtr)->left);
+    if(isDoubleBlack((*parentPtr)->left, removeNode)) 
+      caseSelectForSucessor(&(*parentPtr)); 
   }
-  (*rootPtr)->color = colour;
-}
-
-void caseSelect( Node **rootPtr){
-  Node *root = *rootPtr;
-
-  if(root){  
-    if( checkForEnterCase1(root) ){
-      NephewIsRedSiblingIsBlack(&(*rootPtr)); 
-      //printf("enter case1\n");
-    }
-    else if( checkForEnterCase2(root) ){
-      NephewAndSiblingIsBlack(&(*rootPtr)); 
-      //printf("enter case2\n");
-    }
-    else if( checkForEnterCase3(root) ){
-      SiblingIsRed(&(*rootPtr)); 
-      //printf("enter case3\n");
-    }
+  else{
+    removeNode = parent;
+    *parentPtr = parent->right;
+    (*parentPtr)->color = parent->color;
   }
+  return removeNode;
 }
 
 void caseSelectForSucessor( Node **rootPtr){
@@ -242,26 +155,6 @@ void caseSelectForSucessor( Node **rootPtr){
        //printf("enter Sucessor case3\n");
    }
   }
-}
-
-Node *removeNextLargerSuccessor(Node **parentPtr){
-  Node *parent = *parentPtr, *removeNode;
-
-  if(parent->left == NULL && parent->right == NULL){
-    removeNode = *parentPtr;
-    *parentPtr = NULL;
-  }
-  else if(parent->left){
-    removeNode = removeNextLargerSuccessor(&(*parentPtr)->left);
-    if(isDoubleBlack((*parentPtr)->left, removeNode)) 
-      caseSelectForSucessor(&(*parentPtr)); 
-  }
-  else{
-    removeNode = parent;
-    *parentPtr = parent->right;
-    (*parentPtr)->color = parent->color;
-  }
-  return removeNode;
 }
 
 Node *delRedBlackTree( Node **rootPtr, Node *newNode){
@@ -297,4 +190,121 @@ Node *_delRedBlackTree(Node **rootPtr, Node *newNode){
   
   caseSelect(&(*rootPtr));
   return node;
+}
+
+void caseSelect( Node **rootPtr){
+  Node *root = *rootPtr;
+
+  if(root){  
+    if( checkForEnterCase1(root) ){
+      printf("enter case1\n");
+      NephewIsRedSiblingIsBlack(&(*rootPtr)); 
+     
+    }
+    else if( checkForEnterCase2(root) ){
+      printf("enter case2\n");
+      NephewAndSiblingIsBlack(&(*rootPtr));     
+    }
+    else if( checkForEnterCase3(root) ){
+      printf("enter case3\n");
+      SiblingIsRed(&(*rootPtr));       
+    }
+  }
+}
+
+int checkForEnterCase1( Node *root){
+    if( root->left && !root->right && root->left->color =='b' ){
+      if( (root->left ->right && root->left ->right->color =='r') || (root->left->left && root->left->left->color =='r') )
+         return 1;
+    }
+    else if( root->right && !root->left && root->right->color =='b' ){
+      if( (root->right->right && root->right->right->color =='r') || (root->right->left && root->right->left->color =='r') )
+         return 1;
+    }
+    return 0;
+}
+
+int checkForEnterCase2( Node *root){
+    if(root->left && !root->right){
+      if( noChildNode( &(root->left) ) )
+        return 1;  
+    }
+    else if( root->right && !root->left){
+      if( noChildNode( &(root->right) ) )
+        return 1;
+    }
+    return 0;
+}
+
+int checkForEnterCase3( Node *root){
+    if(root->left && root->left->color =='r'){
+      if( !root->right || root->right->color =='d')
+        return 1;  
+    }
+    else if( root->right && root->right->color =='r'){
+      if( !root->left || root->left->color =='d')
+        return 1;
+    }
+    return 0;
+}
+
+
+//Function for handle case1
+void NephewIsRedSiblingIsBlack(Node **rootPtr){
+  Node *root = *rootPtr;
+  char colour = root->color; //store the original root color
+
+  restructureUnBalanceTreeWithoutColourFlopping( rootPtr);
+  ForceChildNodeToBlack(&(*rootPtr));
+  (*rootPtr)->color = colour;
+}
+
+//Function for handle case2
+void NephewAndSiblingIsBlack(Node **rootPtr){
+  Node *root = *rootPtr;
+  
+  if(root->color == 'b')
+    root->color = 'd';
+  else if(root->color == 'r') 
+    root->color = 'b';
+ 
+  if(root->left)
+    root->left->color = (root->left->color == 'd')? 'b':'r';
+  if(root->right)
+    root->right->color = (root->right->color == 'd')? 'b':'r';
+  
+}
+
+//Function for handle case3
+void SiblingIsRed(Node **rootPtr){
+  Node *root = *rootPtr;
+  char colour = root->color; // store the original root color
+
+  if( root->right ){
+    leftRotate(&(*rootPtr));
+    (*rootPtr)->left->color = 'r';
+    
+    if((*rootPtr)->left && ((*rootPtr)->left->right) && ((*rootPtr)->left->right->right) ){
+      NephewIsRedSiblingIsBlack(&(*rootPtr)->left); 
+     // printf("leftSide, enter case1\n");
+    }
+    else{
+      NephewAndSiblingIsBlack(&(*rootPtr)->left);  
+    //  printf("leftSide, enter case2\n");
+    }
+  }
+  else if( root->left ){
+    rightRotate(&(*rootPtr));
+    (*rootPtr)->right->color = 'r';
+    
+    if((*rootPtr)->right && ((*rootPtr)->right->left) && ((*rootPtr)->right->left->left)){
+      NephewIsRedSiblingIsBlack(&(*rootPtr)->right);  
+     // printf("RightSide, enter case1\n");   
+    }
+    else{
+      NephewAndSiblingIsBlack(&(*rootPtr)->right);   
+     // printf("RightSide, enter case2\n"); 
+    }
+  }
+  (*rootPtr)->color = colour;
 }
