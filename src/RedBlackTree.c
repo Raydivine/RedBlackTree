@@ -84,6 +84,8 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode){
 		*rootPtr = newNode;
 		return;
 	}
+  if(newNode->data == root->data)
+    Throw(ERR_EQUIVALENT_NODE);
 	if(newNode->data < root->data)
 		_addRedBlackTree( &root->left ,	newNode);
 	if(newNode->data > root->data)

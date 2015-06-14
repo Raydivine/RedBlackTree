@@ -4,6 +4,7 @@
 #include "Rotations.h"
 #include "RedBlackTree.h"
 #include "CustomAssertions.h"
+#include "CException.h"
 
 Node node1,node2,node3,node4 ,node5, node6, node7, node8, node9, node10, node11, node12, node13, node14, node15, node20, node22, node30, node40, node60;
 
@@ -50,6 +51,27 @@ void test_addRedBlackTree_add_10_to_empty_tree(void){
 	TEST_ASSERT_EQUAL_PTR(node10.left , NULL);
 	TEST_ASSERT_EQUAL_PTR(node10.right, NULL);
 	TEST_ASSERT_EQUAL(node10.color, 'b');
+}
+
+/** 2-node case
+ *                 add 10
+ * root -> 10(b)  -------> Throw ERR_EQUIVALENT_NODE
+ */
+void test_addRedBlackTree_add_10_to_use_tree_with_only_root_10_should_throw_ERR_EQUIVALENT_NODE(void)
+{
+    CEXCEPTION_T err;
+    setNode(&node10, NULL, NULL, 'b');
+    Node *root = &node10;
+
+    Try{
+        addRedBlackTree(&root, &node10);
+        TEST_FAIL_MESSAGE("Expected ERR_EQUIVALENT_NODE to be thrown. But receive none");
+    } Catch(err)
+    {
+        TEST_ASSERT_EQUAL_PTR(&node10, root);
+        //                      left  right colour  node
+        TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node10);
+    }
 }
 
 /**
