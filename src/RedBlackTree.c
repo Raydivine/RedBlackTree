@@ -1,5 +1,5 @@
 #include "RedBlackTree.h"
-#include "Rotation.h"
+#include "Rotations.h"
 #include <stdio.h>
 #include "ErrorCode.h"
 
@@ -197,16 +197,15 @@ void caseSelect( Node **rootPtr){
 
   if(root){  
     if( checkForEnterCase1(root) ){
-      printf("enter case1\n");
-      NephewIsRedSiblingIsBlack(&(*rootPtr)); 
-     
+     // printf("enter case1\n");
+      NephewIsRedSiblingIsBlack(&(*rootPtr));  
     }
     else if( checkForEnterCase2(root) ){
-      printf("enter case2\n");
+   //   printf("enter case2\n");
       NephewAndSiblingIsBlack(&(*rootPtr));     
     }
     else if( checkForEnterCase3(root) ){
-      printf("enter case3\n");
+    //  printf("enter case3\n");
       SiblingIsRed(&(*rootPtr));       
     }
   }
